@@ -31,7 +31,7 @@ const fetchAuthenticated = async (url, method, body = null) => {
 
 export const login = async (formData) => {
   const url = `${BASE_API_URL}/login`;
-  return fetchJSON(url, "POST", formData);
+  return fetchAuthenticated(url, "POST", formData);
 };
 
 //--------------------- REGISTER------------------
