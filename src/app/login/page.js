@@ -4,7 +4,8 @@ import ComponentLevelLoader from "@/components/ComponentLevelLoader";
 import InputComponent from "@/components/FormElements/InputComponent";
 import Notification from "@/components/Notification";
 import { GlobalContext } from "@/context/globalContext";
-import { login } from "@/services/loginService";
+import { login } from "@/services/services";
+
 import { loginFormControls } from "@/utils";
 
 import Cookies from "js-cookie";

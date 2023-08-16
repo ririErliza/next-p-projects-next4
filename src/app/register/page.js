@@ -4,7 +4,8 @@ import ComponentLevelLoader from "@/components/ComponentLevelLoader";
 import InputComponent from "@/components/FormElements/InputComponent";
 import Notification from "@/components/Notification";
 import { GlobalContext } from "@/context/globalContext";
-import { registerNewUser } from "@/services/registerService";
+import { registerNewUser } from "@/services/services";
+
 import { registrationFormControls } from "@/utils";
 
 import { useRouter } from "next/navigation";

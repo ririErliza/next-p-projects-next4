@@ -1,4 +1,5 @@
 import connectToDB from "@/database";
+import AuthUser from "@/middleware/AuthUser";
 import Product from "@/models/product";
 import Joi from "joi";
 import { NextResponse } from "next/server";
@@ -21,64 +22,38 @@ export async function POST(req) {
   try {
     await connectToDB();
 
-    const user = "admin";
+    const isAuthUser = await AuthUser(req);
 
-    if (user === "admin") {
-      const extractData = await req.json();
-      const {
-        name,
-        description,
-        price,
-        imageUrl,
-        category,
-        sizes,
-        deliveryInfo,
-        onSale,
-        priceDrop,
-      } = extractData;
-
-      const { error } = AddNewProductSchema.validate({
-        name,
-        description,
-        price,
-        imageUrl,
-        category,
-        sizes,
-        deliveryInfo,
-        onSale,
-        priceDrop,
-      });
-
-      if (error) {
-        return NextResponse.json({
-          success: false,
-          message: error.details[0].message,
-        });
-      }
-      const newlyCreatedProduct = await Product.create(extractData);
-
-      if (newlyCreatedProduct) {
-        return NextResponse.json({
-          success: true,
-          message: "Product added successfully",
-        });
-      } else {
-        return NextResponse.json({
-          success: false,
-          message: "Failed to add the product ! please try again",
-        });
-      }
-    } else {
+    if (!isAuthUser || isAuthUser.role !== "admin") {
       return NextResponse.json({
         success: false,
-        message: "You are not autorized !",
+        message: "You are not authorized!",
       });
     }
+
+    const extractData = await req.json();
+    const { error } = AddNewProductSchema.validate(extractData);
+
+    if (error) {
+      return NextResponse.json({
+        success: false,
+        message: error.details[0].message,
+      });
+    }
+
+    const newlyCreatedProduct = await Product.create(extractData);
+
+    return NextResponse.json({
+      success: newlyCreatedProduct ? true : false,
+      message: newlyCreatedProduct
+        ? "Product added successfully"
+        : "Failed to add the product! Please try again",
+    });
   } catch (error) {
     console.log(error);
     return NextResponse.json({
-      success: true,
-      message: "Product added successfully",
+      success: false,
+      message: "Something went wrong! Please try again later",
     });
   }
 }
