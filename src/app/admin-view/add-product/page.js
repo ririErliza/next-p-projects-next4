@@ -1,8 +1,15 @@
 "use client";
 
+import InputComponent from "@/components/FormElements/InputComponent";
+import SelectComponent from "@/components/FormElements/SelectComponent";
+import TileComponent from "@/components/FormElements/TileComponent";
+import { AvailableSizes, adminAddProductformControls } from "@/utils";
 import { useRouter } from "next/navigation";
 
 export default function AdminAddNewProduct() {
+  function handleImage() {
+    console.log("image");
+  }
   const router = useRouter();
   return (
     <div className="w-full mt-5 mr-0 mb-0 ml-0 relative">
@@ -20,45 +27,47 @@ export default function AdminAddNewProduct() {
             accept="image/*"
             max="1000000"
             type="file"
-            //   onChange={handleImage}
+            onChange={handleImage}
           />
 
           <div className="flex gap-2 flex-col">
             <label>Available sizes</label>
-            {/* <TileComponent
-                selected={formData.sizes}
-                onClick={handleTileClick}
-                data={AvailableSizes}
-              /> */}
+            <TileComponent
+              // selected={formData.sizes}
+              // onClick={handleTileClick}
+              data={AvailableSizes}
+            />
           </div>
-          {/* {adminAddProductformControls.map((controlItem) =>
-              controlItem.componentType === "input" ? (
-                <InputComponent
-                  type={controlItem.type}
-                  placeholder={controlItem.placeholder}
-                  label={controlItem.label}
-                  value={formData[controlItem.id]}
-                  onChange={(event) => {
-                    setFormData({
-                      ...formData,
-                      [controlItem.id]: event.target.value,
-                    });
-                  }}
-                />
-              ) : controlItem.componentType === "select" ? (
-                <SelectComponent
-                  label={controlItem.label}
-                  options={controlItem.options}
-                  value={formData[controlItem.id]}
-                  onChange={(event) => {
-                    setFormData({
-                      ...formData,
-                      [controlItem.id]: event.target.value,
-                    });
-                  }}
-                />
-              ) : null
-            )} */}
+          {adminAddProductformControls.map((controlItem) =>
+            controlItem.componentType === "input" ? (
+              <InputComponent
+                key={controlItem.id}
+                type={controlItem.type}
+                placeholder={controlItem.placeholder}
+                label={controlItem.label}
+                // value={formData[controlItem.id]}
+                // onChange={(event) => {
+                //   setFormData({
+                //     ...formData,
+                //     [controlItem.id]: event.target.value,
+                //   });
+                // }}
+              />
+            ) : controlItem.componentType === "select" ? (
+              <SelectComponent
+                key={controlItem.id}
+                label={controlItem.label}
+                options={controlItem.options}
+                // value={formData[controlItem.id]}
+                // onChange={(event) => {
+                //   setFormData({
+                //     ...formData,
+                //     [controlItem.id]: event.target.value,
+                //   });
+                // }}
+              />
+            ) : null
+          )}
           <button
             //   onClick={handleAddProduct}
             className="inline-flex w-full items-center justify-center bg-black px-6 py-4 text-lg text-white font-medium uppercase tracking-wide"
