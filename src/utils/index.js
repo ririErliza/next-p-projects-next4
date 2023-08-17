@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+
 export const navOptions = [
   {
     id: "home",
@@ -188,14 +190,14 @@ export const AvailableSizes = [
   },
 ];
 
-export const firebaseConfig = {
-  apiKey: "API_KEY",
-  authDomain: "AUTH_DOMAIN",
-  projectId: "PROJECT_ID",
-  storageBucket: "STROAGE_BUCKET",
-  messagingSenderId: "MESSAGING_SENDER_ID",
-  appId: "APP_ID",
-  measurementId: "MEASUREMENT_ID",
+const firebaseConfig = {
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID,
+  measurementId: process.env.MEASUREMENT_ID,
 };
 
 export const firebaseStroageURL = "YOUR_FIREBASE_STROAGE_URL";
