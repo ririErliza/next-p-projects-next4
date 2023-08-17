@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 
+dotenv.config();
+
 export const navOptions = [
   {
     id: "home",
@@ -190,7 +192,7 @@ export const AvailableSizes = [
   },
 ];
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: process.env.API_KEY,
   authDomain: process.env.AUTH_DOMAIN,
   projectId: process.env.PROJECT_ID,

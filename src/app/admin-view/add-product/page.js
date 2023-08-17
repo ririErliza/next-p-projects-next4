@@ -3,8 +3,15 @@
 import InputComponent from "@/components/FormElements/InputComponent";
 import SelectComponent from "@/components/FormElements/SelectComponent";
 import TileComponent from "@/components/FormElements/TileComponent";
-import { AvailableSizes, adminAddProductformControls } from "@/utils";
+import {
+  AvailableSizes,
+  adminAddProductformControls,
+  firebaseConfig,
+} from "@/utils";
 import { useRouter } from "next/navigation";
+import { initializeApp } from "firebase/app";
+
+const app = initializeApp(firebaseConfig);
 
 export default function AdminAddNewProduct() {
   function handleImage() {
