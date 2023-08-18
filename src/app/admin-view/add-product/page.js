@@ -7,21 +7,96 @@ import {
   AvailableSizes,
   adminAddProductformControls,
   firebaseConfig,
+  firebaseStorageURL,
 } from "@/utils";
 import { useRouter } from "next/navigation";
 import { initializeApp } from "firebase/app";
-import { getStorage } from "firebase/storage";
-import dotenv from "dotenv";
-
-dotenv.config();
+import {
+  getDownloadURL,
+  getStorage,
+  uploadBytesResumable,
+  ref,
+} from "firebase/storage";
+import { useState } from "react";
 
 const app = initializeApp(firebaseConfig);
-const storage = getStorage(app, process.env.STORAGE_URL);
+const storage = getStorage(app, firebaseStorageURL);
+
+const createUniqueFileName = (getFile) => {
+  const timeStamp = Date.now();
+  const randomStringValue = Math.random().toString(36).substring(2, 12);
+
+  return `${getFile.name}-${timeStamp}-${randomStringValue}`;
+};
+
+async function helperForUPloadingImageToFirebase(file) {
+  const getFileName = createUniqueFileName(file);
+  const storageReference = ref(storage, `ecommerce/${getFileName}`);
+  const uploadImage = uploadBytesResumable(storageReference, file);
+
+  return new Promise((resolve, reject) => {
+    uploadImage.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {
+        console.log(error);
+        reject(error);
+      },
+      () => {
+        getDownloadURL(uploadImage.snapshot.ref)
+          .then((downloadUrl) => resolve(downloadUrl))
+          .catch((error) => reject(error));
+      }
+    );
+  });
+}
+
+const initialFormData = {
+  name: "",
+  price: 0,
+  description: "",
+  category: "men",
+  sizes: [],
+  deliveryInfo: "",
+  onSale: "no",
+  imageUrl: "",
+  priceDrop: 0,
+};
 
 export default function AdminAddNewProduct() {
+  const [formData, setFormdata] = useState(initialFormData);
+
   async function handleImage(event) {
-    console.log(event.target.files);
+    const extractImageUrl = await helperForUPloadingImageToFirebase(
+      event.target.files[0]
+    );
+
+    if (extractImageUrl !== "") {
+      setFormdata({
+        ...formData,
+        imageUrl: extractImageUrl,
+      });
+    }
   }
+
+  console.log(formData);
+
+  function handleTileClick(getCurrentItem) {
+    let cpySizes = [...formData.sizes];
+    const index = cpySizes.findIndex((item) => item.id === getCurrentItem.id);
+
+    if (index === -1) {
+      cpySizes.push(getCurrentItem);
+    } else {
+      cpySizes = cpySizes.filter((item) => item.id !== getCurrentItem.id);
+    }
+
+    setFormdata({
+      ...formData,
+      sizes: cpySizes,
+    });
+  }
+
   const router = useRouter();
   return (
     <div className="w-full mt-5 mr-0 mb-0 ml-0 relative">
@@ -45,8 +120,8 @@ export default function AdminAddNewProduct() {
           <div className="flex gap-2 flex-col">
             <label>Available sizes</label>
             <TileComponent
-              // selected={formData.sizes}
-              // onClick={handleTileClick}
+              selected={formData.sizes}
+              onClick={handleTileClick}
               data={AvailableSizes}
             />
           </div>
@@ -57,26 +132,26 @@ export default function AdminAddNewProduct() {
                 type={controlItem.type}
                 placeholder={controlItem.placeholder}
                 label={controlItem.label}
-                // value={formData[controlItem.id]}
-                // onChange={(event) => {
-                //   setFormData({
-                //     ...formData,
-                //     [controlItem.id]: event.target.value,
-                //   });
-                // }}
+                value={formData[controlItem.id]}
+                onChange={(event) => {
+                  setFormdata({
+                    ...formData,
+                    [controlItem.id]: event.target.value,
+                  });
+                }}
               />
             ) : controlItem.componentType === "select" ? (
               <SelectComponent
                 key={controlItem.id}
                 label={controlItem.label}
                 options={controlItem.options}
-                // value={formData[controlItem.id]}
-                // onChange={(event) => {
-                //   setFormData({
-                //     ...formData,
-                //     [controlItem.id]: event.target.value,
-                //   });
-                // }}
+                value={formData[controlItem.id]}
+                onChange={(event) => {
+                  setFormdata({
+                    ...formData,
+                    [controlItem.id]: event.target.value,
+                  });
+                }}
               />
             ) : null
           )}
