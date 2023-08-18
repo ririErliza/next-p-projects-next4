@@ -10,12 +10,17 @@ import {
 } from "@/utils";
 import { useRouter } from "next/navigation";
 import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = initializeApp(firebaseConfig);
+const storage = getStorage(app, process.env.STORAGE_URL);
 
 export default function AdminAddNewProduct() {
-  function handleImage() {
-    console.log("image");
+  async function handleImage(event) {
+    console.log(event.target.files);
   }
   const router = useRouter();
   return (

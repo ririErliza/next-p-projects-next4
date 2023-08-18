@@ -202,7 +202,7 @@ export const firebaseConfig = {
   measurementId: process.env.MEASUREMENT_ID,
 };
 
-export const firebaseStroageURL = "YOUR_FIREBASE_STROAGE_URL";
+export const firebaseStroageURL = process.env.STORAGE_URL;
 
 export const addNewAddressFormControls = [
   {
